@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Video Downloader</title>
+  </head>
+
+  <body>
+
+    <div id="compress-section" class="round-corner">
+
+      <div>
+        <div class="compress-button-container">
+          <div class="compress-button">
+            <div>
+              <p>Current</p>
+              <span id="current-mb-display"></span><span>MB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="compress-button-container">
+          <div class="compress-button">
+            <div>
+              <p>Custom</p>
+              <input type="number" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);"><span>MB</span>
+            </div>
+          </div>       
+        </div>        
+      </div>
+
+
+
+      <div>
+        <div class="compress-button-container">
+          <div class="compress-button">
+            <span>50</span><span>MB</span>
+          </div>
+        </div>
+        <div class="compress-button-container">
+          <div class="compress-button">
+            <span>25</span><span>MB</span>
+          </div>
+        </div>
+        <div class="compress-button-container">
+          <div class="compress-button">
+            <span>10</span><span>MB</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="main-section">
+
+        <div id="download-section">
+          <input id="link-input" class="press-start-2p-regular" type="text" placeholder="Insert link" autofocus/>
+        </div>
+
+      <div id="video-section">
+        
+        <div id="video-wrapper">
+          <div id="video-container" style="display: none;">
+            <video id="video-preview" muted loop autoplay></video>
+            <div id="crop-area-div"></div>
+          </div>
+
+          <div id="download-icon" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          
+          <p id="drop-here" class="press-start-2p-regular">[ DROP ]</p>
+
+        </div>
+
+      </div>
+
+
+      <div id="cropping-controls">
+        <div id="slider-div">
+          <div id="slider-track"></div>
+          <div id="slider-track-bg"></div>
+          <input type="range" min="0" max="1000" value="0" id="slider-1">
+          <input type="range" min="0" max="1000" value="1000" id="slider-2">
+        </div>
+        <div id="timeboxes-div">
+          <input id="timeStartBox" class="timeBox" type="text" placeholder="MM:SS:ms" pattern="[0-9]{2}:[0-5][0-9]" readonly >
+          <input id="timeEndBox" class="timeBox" type="text" placeholder="MM:SS:ms" pattern="[0-9]{2}:[0-5][0-9]" readonly >
+        </div>
+      </div>
+
+      <!-- Trouve leurs une meilleure place      -->
+      <div id="video-controls" style="visibility: hidden;">
+        <button id="mute-btn" style="display: none;" class="button">Unmute</button>
+        <span id="video-time"></span>
+      </div>
+
+    </div>
+
+
+    <div id="pipeline-wrapper">
+    <div id="pipeline-container">
+          <div id="pipeline-bar"></div>
+
+          <div id="pipe-step-div-text">
+            <label class="press-start-2p-regular">Download</label>
+            <label class="press-start-2p-regular">Crop</label>
+            <label class="press-start-2p-regular">Ratio</label>
+            <label class="press-start-2p-regular">Compress</label>
+            <label class="press-start-2p-regular">Done</label>
+          </div>
+
+          <div id="pipe-step-div">
+            <div class="pipe-step" ></div>
+            <div class="pipe-step" ></div>
+            <div class="pipe-step" ></div>
+            <div class="pipe-step" ></div>
+            <div class="pipe-step" ></div>
+          </div>
+
+    </div>
+    </div>
+
+
+
+    <div id="done-container">
+      <input id="apply-button" type="button" value="Apply" class="button" disabled />
+      <input id="done-button" type="button" value="Done" class="button" disabled/>
+    </div>
+
+    
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Scripts -->
+    <script src="scripts/main.js"></script>
+    <script src="scripts/download.js"></script>
+    <script src="scripts/crop.js"></script>
+    <script src="scripts/ratio.js"></script>
+    <script src="scripts/compress.js"></script>
+    <script src="scripts/clean.js"></script>
+    <script src="scripts/dropBox.js"></script>
+    <script src="scripts/ui-tools.js"></script>
+  </body>
+</html>
