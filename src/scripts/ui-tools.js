@@ -117,7 +117,6 @@ function loadUI(file) {
     });
 
     /* Just to make so when u click on the custom compress box it auto focus */
-    // BROKEN
     const customInputLabel = document.getElementById('customInputLabel');
     customInputLabel.addEventListener('click', () => {
       customInput.focus();
@@ -135,6 +134,10 @@ function loadUI(file) {
       }
     });resizeObserver.observe(wrapper);
 
+    video.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
 
     //Progress bar
     document.getElementById("pipeline-wrapper").style.display = "flex";

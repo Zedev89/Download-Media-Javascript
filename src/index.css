@@ -144,14 +144,19 @@ body {
   bottom: 10px;
 }
 
-
-
-
-
-.button {
-  background-color: var(--primary-color);
+#apply-button {
+  font-size: 16px;
+  width: 80px;
+  height: 40px;
+  cursor: pointer;
   padding: 5px;
+  background-color: var(--primary-color);
 }
+
+#apply-button:hover {
+  background-color: var(--dark-primary-color);
+}
+
 
 
 
@@ -206,6 +211,12 @@ body {
   aspect-ratio: auto;
   /*Uses JS for size contains because fuck CSS never works like it should*/
 }
+
+#video-preview::-webkit-media-controls {
+  transform: translateY(30px);
+  transform-origin: bottom; 
+}
+
 
 /*CROP*/
 #crop-area-div {

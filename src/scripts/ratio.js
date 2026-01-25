@@ -9,15 +9,17 @@ const cropAreaDiv = document.getElementById("crop-area-div");
 videoPreview.addEventListener("mousedown", (event) => {
   isDragging = true;
   mouseDownPos = { x: event.offsetX, y: event.offsetY };
-
-  cropAreaDiv.style.display = "flex";
-  cropAreaDiv.style.width = "0px";
-  cropAreaDiv.style.height = "0px";
 });
 
 window.addEventListener("mousemove", (event) => {
   if (!isDragging) return;
   croppingAreaDefined = true;
+
+  cropAreaDiv.style.display = "flex";
+  cropAreaDiv.style.width = "0px";
+  cropAreaDiv.style.height = "0px";
+
+  videoPreview.controls = false;
 
   const rect = videoPreview.getBoundingClientRect();
 
@@ -45,6 +47,7 @@ window.addEventListener("mousemove", (event) => {
 
 window.addEventListener("mouseup", () => {
   isDragging = false;
+  videoPreview.controls = true;
 });
 
 

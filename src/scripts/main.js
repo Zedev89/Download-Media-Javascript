@@ -74,9 +74,8 @@ window.onceReady = function() {
     
 
 
-    //Enable apply + done
+    //Enable save
     document.getElementById("apply-button").disabled = false;
-    document.getElementById("done-button").disabled = false;
 }
 
 
@@ -84,7 +83,6 @@ window.onceReady = function() {
 
 // 2. Operation pipeline Crop -> Ratio -> Compress
 document.getElementById("apply-button").onclick = async function () {
-  document.getElementById("done-button").disabled = true;
 
   try {
 
@@ -112,23 +110,24 @@ document.getElementById("apply-button").onclick = async function () {
   } finally {
     console.log("Changes applied successfully!");
 
-    //Re-enable done
-    document.getElementById("done-button").disabled = false;
-
     // UI Progress bar
     memoryPercentProgress = 100;
     updateProgressbar(100);
     updateStep(4);
     setProgressToGreen();
+    
+    // Sleep 1 and auto call the save button
+    await new Promise(r => setTimeout(r, 1000));
+    saveFile();
   }
 
 };
 
 // 3. Cleanup (move to Downloads and delete tmp folders created in download.js)
-document.getElementById("done-button").onclick = async function () {
+const saveFile = async function () {
   try {
     file = await cleanUp(file, fileNameMemory, outputFolder, operationFolder);
     shell.showItemInFolder(file);
   } catch (error) {console.error(error);}
-  finally {/*window.close();*/}
+  finally {window.close();}
 };
