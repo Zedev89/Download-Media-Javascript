@@ -142,20 +142,11 @@ function loadUI(file) {
     //Progress bar
     document.getElementById("pipeline-wrapper").style.display = "flex";
     updateStep(0);
-    
 
-    /* TIMER */
-    /* NOT IN USE
-    timeDisplay.style.display = "block";
+    //Auto focus 
+    document.getElementById("apply-button").focus();
 
-    video.addEventListener("timeupdate", () => {
-      const totalSeconds = Math.floor(video.currentTime);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      const formattedTime = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
-      timeDisplay.innerText = formattedTime;
-    });
-    */
+
   };
 
 }
