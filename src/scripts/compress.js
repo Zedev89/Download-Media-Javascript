@@ -1,11 +1,48 @@
 
-// DELETED
-let compressInput = document.getElementById("compress-input");
+
+let activeSize = null;
+
+const customInput = document.getElementById('custom-mb-input');
+const customRadio = document.querySelector('input[value="custom"]');
+
+
+document.querySelectorAll('input[name="size-group"]').forEach(radio => {
+  radio.addEventListener('change', (e) => {
+    updateVariable();
+  });
+});
+
+
+customInput.addEventListener('input', () => {
+  customRadio.checked = true; 
+  updateVariable();
+});
+
+/* Set varriable to the clicked button */
+function updateVariable() {
+  const selectedRadio = document.querySelector('input[name="size-group"]:checked');
+  
+  if (!selectedRadio) return;
+
+  if (selectedRadio.value === 'custom') {
+    compressInput = customInput.value;
+  } else {
+    compressInput = selectedRadio.value;
+  }
+  
+}
+
+
+
+
+
+
+
 
 /* Compress */
 window.compress = async function (file, outputFolder) {
 
-  let targetValueMB = Number(compressInput.value) || 0;
+  let targetValueMB = Number(compressInput) || 0;
   
   //Wrap the whole thing in a promess to make sure the rest of the code waits for it to be done
   return new Promise((resolve, reject) => {
@@ -13,6 +50,7 @@ window.compress = async function (file, outputFolder) {
     ffmpeg.ffprobe(file, async (err, metadata) => {
       if (err) {return reject(err);}
 
+      
       let sizeInMB = (metadata.format.size / (1024 * 1024)).toFixed(2);
 
       if (targetValueMB > 0 && sizeInMB > targetValueMB) {
@@ -57,6 +95,7 @@ window.compress = async function (file, outputFolder) {
         return fileOutput;
 
       } else {
+        console.log("Compression skipped!");
         resolve(null);
       }
 

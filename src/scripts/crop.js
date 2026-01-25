@@ -20,6 +20,12 @@ function slideOne() {
   updateColorTrack();
   updateTimeBoxes();
   upadteTimeboxesPosition();
+
+  /* Appear above if overlap */
+  timeStartBox.style.zIndex = 2
+  timeEndBox.style.zIndex = 1
+
+  video.currentTime = (slider1.value*video.duration/sliderMaxValue);
 }
 
 function slideTwo() {
@@ -29,6 +35,12 @@ function slideTwo() {
   updateColorTrack();
   updateTimeBoxes();
   upadteTimeboxesPosition();
+
+  /* Appear above if overlap */
+  timeStartBox.style.zIndex = 1
+  timeEndBox.style.zIndex = 2
+
+  video.currentTime = (slider2.value*video.duration/sliderMaxValue);
 }
 
 function upadteTimeboxesPosition() {
@@ -40,7 +52,6 @@ function upadteTimeboxesPosition() {
 function updateColorTrack() {
   let slider1Value = parseFloat(slider1.value/10); //range max value = 1000
   let slider2Value = parseFloat(slider2.value/10); //so divide by 10 to be in %
-
   sliderTrack.style.background =
   `linear-gradient(
     to right,
@@ -61,6 +72,7 @@ function updateTimeBoxes() {
     timeEndBox.value = "Invalid";
   }
 }
+
 
 function secToTimecodeConvert(totalSeconds) {
   let date = new Date(totalSeconds * 1000); 

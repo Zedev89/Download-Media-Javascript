@@ -7,51 +7,48 @@
 
   <body>
 
-    <div id="compress-section" class="round-corner">
+    <div id="compress-section">
 
-      <div>
-        <div class="compress-button-container">
-          <div class="compress-button">
-            <div>
-              <p>Current</p>
-              <span id="current-mb-display"></span><span>MB</span>
-            </div>
-          </div>
+      <div class="topBottomPadding darkColorBg">
+        <p>Current</p>
+        <div class="input-container">
+          <span id="current-mb-display">00</span>
+          <span>MB</span>
         </div>
       </div>
+    
+      <label id="customInputLabel" class="radio-btn">
+        <input type="radio" name="size-group" value="custom">
+        <div class="topBottomPadding radio-content">
+          <p>Custom</p>
+          <div class="input-container">
+            <input type="number" id="custom-mb-input" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);" max="99">
+            <span>MB</span>
+          </div>
+        </div>
+      </label>
 
-      <div>
-        <div class="compress-button-container">
-          <div class="compress-button">
-            <div>
-              <p>Custom</p>
-              <input type="number" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);"><span>MB</span>
-            </div>
-          </div>       
-        </div>        
+      
+      <div id="preset-container">
+        <label class="radio-btn">
+          <input type="radio" name="size-group" value="50">
+          <div class="topBottomPadding radio-content"><span>50</span><span>MB</span></div>
+        </label>
+        
+        <label class="radio-btn">
+          <input type="radio" name="size-group" value="25">
+          <div class="topBottomPadding radio-content"><span>25</span><span>MB</span></div>
+        </label>
+        
+        <label class="radio-btn">
+          <input type="radio" name="size-group" value="10">
+          <div class="topBottomPadding radio-content"><span>10</span><span>MB</span></div>
+        </label>
       </div>
-
-
-
-      <div>
-        <div class="compress-button-container">
-          <div class="compress-button">
-            <span>50</span><span>MB</span>
-          </div>
-        </div>
-        <div class="compress-button-container">
-          <div class="compress-button">
-            <span>25</span><span>MB</span>
-          </div>
-        </div>
-        <div class="compress-button-container">
-          <div class="compress-button">
-            <span>10</span><span>MB</span>
-          </div>
-        </div>
-      </div>
-
+      
     </div>
+
+
 
     <div id="main-section">
 
@@ -65,6 +62,7 @@
           <div id="video-container" style="display: none;">
             <video id="video-preview" muted loop autoplay></video>
             <div id="crop-area-div"></div>
+
           </div>
 
           <div id="download-icon" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
@@ -89,36 +87,32 @@
         </div>
       </div>
 
-      <!-- Trouve leurs une meilleure place      -->
-      <div id="video-controls" style="visibility: hidden;">
-        <button id="mute-btn" style="display: none;" class="button">Unmute</button>
-        <span id="video-time"></span>
-      </div>
 
     </div>
 
 
     <div id="pipeline-wrapper">
-    <div id="pipeline-container">
+      <div id="pipeline-container">
           <div id="pipeline-bar"></div>
 
+          <!-- Not in use
           <div id="pipe-step-div-text">
-            <label class="press-start-2p-regular">Download</label>
-            <label class="press-start-2p-regular">Crop</label>
-            <label class="press-start-2p-regular">Ratio</label>
-            <label class="press-start-2p-regular">Compress</label>
-            <label class="press-start-2p-regular">Done</label>
-          </div>
+            <label>Download</label>
+            <label>Crop</label>
+            <label>Ratio</label>
+            <label>Compress</label>
+            <label>Done</label>
+          </div>-->
 
           <div id="pipe-step-div">
-            <div class="pipe-step" ></div>
-            <div class="pipe-step" ></div>
-            <div class="pipe-step" ></div>
-            <div class="pipe-step" ></div>
-            <div class="pipe-step" ></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
 
-    </div>
+      </div>
     </div>
 
 
@@ -138,6 +132,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     <script src="scripts/main.js"></script>

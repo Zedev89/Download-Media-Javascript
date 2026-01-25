@@ -2,6 +2,7 @@
 const video = videoPreview;
 
 // Mute button logic
+/* NOT IN USED
 document.getElementById("mute-btn").onclick = function () {
   if (video.muted) {
     video.muted = false;
@@ -11,6 +12,7 @@ document.getElementById("mute-btn").onclick = function () {
     this.textContent = "Unmute";
   }
 };
+*/
 
 let memoryPercentProgress = 0;
 function updateProgressbar(percent) {
@@ -96,14 +98,16 @@ function loadUI(file) {
 
   // Wait for the video to load its dimensions
   video.onloadedmetadata = function () {
+    document.getElementById("done-container").style.display = "block";
     let sliderDiv = document.getElementById("slider-div");
     sliderDiv.style.display = "flex";
     updateTimeBoxes();
-    document.getElementById("mute-btn").style.display = "block";
     document.getElementById("cropping-controls").style.display = "flex";
     document.getElementById("compress-section").style.display = "flex";
-    document.getElementById("video-container").style.display = "flex";
-    document.getElementById("video-wrapper").style.border = "none";
+    const wrapper = document.getElementById('video-wrapper');
+    const container = document.getElementById('video-container');
+    wrapper.style.border = "none";
+    container.style.display = "flex";
 
     //Display current size
     ffmpeg.ffprobe(file, (err, metadata) => {
@@ -112,13 +116,33 @@ function loadUI(file) {
       currentMbSpan.innerText = Math.round(metadata.format.size / (1024 * 1024));
     });
 
+    /* Just to make so when u click on the custom compress box it auto focus */
+    // BROKEN
+    const customInputLabel = document.getElementById('customInputLabel');
+    customInputLabel.addEventListener('click', () => {
+      customInput.focus();
+    });
+
+    /*Uses JS for video size because fuck CSS never works like it should*/
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const wrapperHeight = entry.contentRect.height;
+        const wrapperWidth = entry.contentRect.width;
+        video.style.maxHeight = `${wrapperHeight}px`;
+        video.style.maxWidth = `${wrapperWidth}px`;
+        container.style.maxHeight = `${wrapperHeight}px`;
+        container.style.maxWidth = `${wrapperWidth}px`;
+      }
+    });resizeObserver.observe(wrapper);
+
+
     //Progress bar
-    document.getElementById("pipeline-container").style.display= "flex";
+    document.getElementById("pipeline-wrapper").style.display = "flex";
     updateStep(0);
     
 
     /* TIMER */
-    let timeDisplay = document.getElementById("video-time");
+    /* NOT IN USE
     timeDisplay.style.display = "block";
 
     video.addEventListener("timeupdate", () => {
@@ -128,6 +152,7 @@ function loadUI(file) {
       const formattedTime = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
       timeDisplay.innerText = formattedTime;
     });
+    */
   };
 
 }
