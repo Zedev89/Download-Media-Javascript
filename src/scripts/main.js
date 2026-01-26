@@ -73,8 +73,8 @@ window.onceReady = function() {
     loadUI(file);
     
 
-
-    //Enable save
+    //Enable save/cancel
+    document.getElementById("cancel-button").disabled = false;
     document.getElementById("apply-button").disabled = false;
 }
 
@@ -131,3 +131,15 @@ const saveFile = async function () {
   } catch (error) {console.error(error);}
   finally {window.close();}
 };
+
+
+// Cancel
+document.getElementById("cancel-button").onclick = async function () {
+  try {
+    await fs.promises.rm(operationFolder, { recursive: true, force: true });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    window.close();
+  }
+}
