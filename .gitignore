@@ -1,0 +1,5 @@
+node_modules/
+release/
+bin/ffmpeg.exe
+bin/ffprobe.exe
+package-lock.json

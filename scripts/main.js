@@ -6,6 +6,14 @@ const { shell, ipcRenderer } = require("electron");
 const { time } = require("console");
 const { get } = require("http");
 
+// Set ffmpeg/ffprobe paths for packaged app
+if (process.env.FFMPEG_PATH) {
+  ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH);
+}
+if (process.env.FFPROBE_PATH) {
+  ffmpeg.setFfprobePath(process.env.FFPROBE_PATH);
+}
+
 // Cross-platform: Use VIDEO_CAPTURES_DIR env variable, or fallback to Videos/Captures
 function getVideosFolder() {
   if (process.env.VIDEO_CAPTURES_DIR) {

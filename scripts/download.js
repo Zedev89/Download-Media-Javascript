@@ -9,21 +9,21 @@ window.download = async function(outputFolder, link) {
         const info = await youtubedl(link, { print: '%(title)s', skipDownload: true });
         videoTitle = info.trim();
     } catch (e) {
-        console.log("Could not get title, using default name");
+        console.log("Could not get title, using default name", e);
     }
 
     // Sanitize: remove emojis/unicode, replace special chars, trim
     function sanitizeFilename(name) {
         return name
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // accents → ascii (é→e, è→e, ô→o)
-            .replace(/[^\x20-\x7E]/g, '')                      // remove non-ASCII (emojis etc)
-            .replace(/[<>:"/\\|?*]/g, '')                       // remove Windows forbidden chars
-            .replace(/\.+$/g, '')                                // remove trailing dots
-            .replace(/\.{2,}/g, '.')                             // collapse multiple dots
-            .replace(/\s+/g, ' ')                               // collapse whitespace
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^\x20-\x7E]/g, '')
+            .replace(/[<>:"/\\|?*]/g, '')
+            .replace(/\.+$/g, '')
+            .replace(/\.{2,}/g, '.')
+            .replace(/\s+/g, ' ')
             .trim()
-            .substring(0, 100)                                  // max length
-            || 'download';                                      // fallback if empty
+            .substring(0, 100)
+            || 'download';
     }
 
     const safeName = sanitizeFilename(videoTitle);
@@ -34,12 +34,11 @@ window.download = async function(outputFolder, link) {
         print: 'after_move:filepath',
         format: 'bv*+ba/b',
         mergeOutputFormat: 'mp4'
-    }
+    };
 
     // Download the file
     try {
         console.log("Download start...");
-
         const output = await youtubedl(link, options);
         const downloadedPath = output.trim();
         
@@ -47,7 +46,9 @@ window.download = async function(outputFolder, link) {
         return downloadedPath;
     } catch (error) {
         console.log("Download failed");
-        console.error(error);
+        console.error("Full error:", error);
+        console.error("Error message:", error.message);
+        console.error("Error stderr:", error.stderr);
         return null;
     }
 };

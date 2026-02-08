@@ -15,13 +15,27 @@ function getOutputFolder() {
 }
 const operationFolder = path.join(getOutputFolder(), "downloading");
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-    app.quit();
+// Set ffmpeg/ffprobe paths for packaged app
+function getResourcePath(binName) {
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'bin', binName + (process.platform === 'win32' ? '.exe' : ''));
+  } else {
+    return path.join(__dirname, 'bin', binName + (process.platform === 'win32' ? '.exe' : ''));
+  }
+}
+
+// Set environment variables so fluent-ffmpeg finds the binaries
+process.env.FFMPEG_PATH = getResourcePath('ffmpeg');
+process.env.FFPROBE_PATH = getResourcePath('ffprobe');
+
+// Fix yt-dlp path for packaged app (asar.unpacked)
+if (app.isPackaged) {
+  const ytdlpDir = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'youtube-dl-exec', 'bin');
+  process.env.YOUTUBE_DL_DIR = ytdlpDir;
+  console.log("YOUTUBE_DL_DIR:", ytdlpDir);
 }
 
 const createWindow = () => {
-    // Create the browser window.
     const mainWindow = new BrowserWindow({
         width: 1000,
         height: 600,
@@ -33,7 +47,7 @@ const createWindow = () => {
         },
     });
 
-    // Cleanup temp folders when window is closed (X button)
+    // Cleanup temp folders when window is closed
     mainWindow.on('close', () => {
         try {
             if (fs.existsSync(operationFolder)) {
@@ -45,21 +59,15 @@ const createWindow = () => {
         }
     });
 
-    // and load the index.html of the app.
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-    // Open the DevTools.
+    // Uncomment for debugging:
     // mainWindow.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     createWindow();
 
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
@@ -67,9 +75,6 @@ app.whenReady().then(() => {
     });
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -86,6 +91,3 @@ app.on('before-quit', () => {
         console.error("Cleanup error:", err);
     }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
