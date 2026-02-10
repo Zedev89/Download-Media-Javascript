@@ -51,7 +51,7 @@ const downloadMain = async function () {
 
   //Check link
   if (!link.trim()) {
-    alert('Please enter a link.');
+    document.getElementById("drop-here").innerText = "Please enter a link.";
     return;
   } else {
 
@@ -69,9 +69,11 @@ const downloadMain = async function () {
     file = await download(operationFolder, link);
 
     if (!file) {
-      alert("Video not found :(");
       downloadInProgressUI("onlySection");
       linkBox.value = "";
+      document.getElementById("drop-here").innerText = "Video not found :(";
+      // Show New Download button to allow retry
+      document.getElementById("newdownload-container").style.display = "block";
     } else {
       onceReady();
     }
@@ -99,6 +101,9 @@ window.onceReady = function() {
     //Enable save/cancel
     document.getElementById("cancel-button").disabled = false;
     document.getElementById("apply-button").disabled = false;
+    
+    // Show New Download button after download completes
+    document.getElementById("newdownload-container").style.display = "block";
 }
 
 
@@ -121,47 +126,91 @@ document.getElementById("apply-button").onclick = async function () {
     await fs.promises.copyFile(file, workingPath);
     let workingFile = workingPath;
 
-    // 2.1 Crop
+    // Track if any pipeline step modified the file
+    let wasModified = false;
+    let wasReencoded = false; // Track if file was reencoded (changes container to mp4)
+
+    // 2.1 Crop (uses -c copy, keeps original format)
     fileTmp = await crop(workingFile, operationFolderOutput);
+    console.log("Crop result:", fileTmp ? "modified" : "skipped");
     if (fileTmp) {
       await fs.promises.rename(fileTmp, workingFile);
+      wasModified = true;
     }
 
-    // 2.2 Ratio
+    // 2.2 Ratio (reencodes to mp4)
     fileTmp = await ratio(workingFile, operationFolderOutput);
+    console.log("Ratio result:", fileTmp ? "modified" : "skipped");
     if (fileTmp) {
-      await fs.promises.rename(fileTmp, workingFile);
+      // If working file is not .mp4, switch to .mp4
+      if (path.extname(workingFile) !== '.mp4') {
+        const newWorkingPath = workingFile.replace(path.extname(workingFile), '.mp4');
+        await fs.promises.rename(fileTmp, newWorkingPath);
+        await fs.promises.rm(workingFile, { force: true });
+        workingFile = newWorkingPath;
+      } else {
+        await fs.promises.rename(fileTmp, workingFile);
+      }
+      wasModified = true;
+      wasReencoded = true;
     }
 
-    // 2.3 Compress
+    // 2.3 Compress (reencodes to mp4)
     fileTmp = await compress(workingFile, operationFolderOutput);
+    console.log("Compress result:", fileTmp ? "modified" : "skipped");
     if (fileTmp) {
-      await fs.promises.rename(fileTmp, workingFile);
+      if (path.extname(workingFile) !== '.mp4') {
+        const newWorkingPath = workingFile.replace(path.extname(workingFile), '.mp4');
+        await fs.promises.rename(fileTmp, newWorkingPath);
+        await fs.promises.rm(workingFile, { force: true });
+        workingFile = newWorkingPath;
+      } else {
+        await fs.promises.rename(fileTmp, workingFile);
+      }
+      wasModified = true;
+      wasReencoded = true;
     }
 
-    // Move result to output folder with original name
-    const outputPath = path.join(outputFolder, path.basename(fileNameMemory));
-    await fs.promises.copyFile(workingFile, outputPath);
+    console.log("wasModified:", wasModified, "wasReencoded:", wasReencoded);
 
-    // Keep original if checkbox is checked
-    const keepOriginal = document.getElementById('keep-original-checkbox').checked;
-    if (keepOriginal) {
-      const ext = path.extname(fileNameMemory);
-      const baseName = path.basename(fileNameMemory, ext);
-      const originalOutputPath = path.join(outputFolder, `${baseName}_Original${ext}`);
-      await fs.promises.copyFile(file, originalOutputPath);
-      console.log("Original saved to:", originalOutputPath);
+    const ext = path.extname(fileNameMemory);
+    const baseName = path.basename(fileNameMemory, ext);
+    const originalOutputPath = path.join(outputFolder, path.basename(fileNameMemory));
+    // If reencoded, output as .mp4 regardless of original format
+    const copyExt = wasReencoded ? '.mp4' : ext;
+    const copyOutputPath = path.join(outputFolder, `${baseName}_copy${copyExt}`);
+
+    if (wasModified) {
+      // Save modified file as _copy
+      await fs.promises.copyFile(workingFile, copyOutputPath);
+
+      // Save original if not already in output folder
+      if (!fs.existsSync(originalOutputPath)) {
+        await fs.promises.copyFile(file, originalOutputPath);
+        console.log("Original saved to:", originalOutputPath);
+      }
+
+      console.log("Changes applied successfully! Saved to:", copyOutputPath);
+      shell.showItemInFolder(copyOutputPath);
+    } else {
+      // No modification: save original only if not already there
+      if (!fs.existsSync(originalOutputPath)) {
+        await fs.promises.copyFile(file, originalOutputPath);
+        console.log("Original saved to:", originalOutputPath);
+      } else {
+        console.log("Original already exists in output folder, skipping.");
+      }
+      shell.showItemInFolder(originalOutputPath);
     }
     
-    // Cleanup tmp files (but keep the original)
+    // Cleanup tmp files
     await fs.promises.rm(workingPath, { force: true });
     await fs.promises.rm(operationFolderOutput, { recursive: true, force: true });
 
-    console.log("Changes applied successfully! Saved to:", outputPath);
-    shell.showItemInFolder(outputPath);
-
   } catch (err) {
-    console.log(err);
+    console.error("Pipeline error:", err);
+    document.getElementById("drop-here").innerText = "Error: " + (err.message || err);
+    document.getElementById("drop-here").style.display = "block";
   } finally {
     // UI Progress bar
     memoryPercentProgress = 100;
@@ -236,12 +285,12 @@ function resetUI() {
   cropAreaDiv.style.height = "0px";
   croppingAreaDefined = false;
 
-  // Reset compress radio buttons & variable
+  // Reset compress radio buttons & variables
   document.querySelectorAll('input[name="size-group"]').forEach(r => r.checked = false);
   document.getElementById("custom-mb-input").value = "";
-  document.getElementById("keep-original-checkbox").checked = false;
-  compressInput = 0;
   document.getElementById("current-mb-container").classList.add("active");
+  document.getElementById("customInputLabel").classList.remove("active");
+  document.getElementById("current-mb-display").innerText = "0.0";
 
   // Focus on input
   linkBox.focus();

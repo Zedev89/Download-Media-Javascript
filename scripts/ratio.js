@@ -87,9 +87,8 @@ window.ratio = async function (file, outputFolder) {
 
 
 
-    // Make the new file have the same name
-    const fileExtension = path.extname(file);
-    const fileOutput = path.join(outputFolder, `tmp${fileExtension}`);
+    // Always output as .mp4 for codec compatibility
+    const fileOutput = path.join(outputFolder, `tmp.mp4`);
 
     // Resize the video using ffmpeg
     await new Promise((resolve, reject) => {

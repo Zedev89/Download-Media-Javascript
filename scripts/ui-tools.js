@@ -67,6 +67,7 @@ function downloadInProgressUI(display) {
   switch (display) {
     case "onlySection":
       downloadSection.style.display = "block";
+      downloadSection.style.visibility = "visible";
       downloadIcon.style.display = "none";
       dropText.style.display = "block";
       break;
@@ -109,11 +110,35 @@ function loadUI(file) {
     wrapper.style.border = "none";
     container.style.display = "flex";
 
-    //Display current size
+    //Display current size and init compress UI
     ffmpeg.ffprobe(file, (err, metadata) => {
       if (err) {return console.error(err);}
       let currentMbSpan = document.getElementById("current-mb-display");
-      currentMbSpan.innerText = Math.round(metadata.format.size / (1024 * 1024));
+      let fileSizeMB = Number((metadata.format.size / (1024 * 1024)).toFixed(1));
+      currentMbSpan.innerText = fileSizeMB.toFixed(1);
+
+      // Get duration and audio bitrate
+      const duration = Number(metadata.format.duration) || 1;
+      const audioStream = metadata.streams ? metadata.streams.find(s => s.codec_type === 'audio') : null;
+      const audioBitrateKbps = (audioStream && audioStream.bit_rate) ? (Number(audioStream.bit_rate) / 1000) : 64;
+
+      // Determine resolution from video height
+      let detectedResolution = null;
+      if (metadata.streams) {
+        const videoStream = metadata.streams.find(stream => stream.codec_type === 'video');
+        if (videoStream && videoStream.height) {
+          const height = videoStream.height;
+          if (height >= 1050) detectedResolution = '1080';
+          else if (height >= 680) detectedResolution = '720';
+          else if (height >= 400) detectedResolution = '480';
+          else if (height >= 200) detectedResolution = '320';
+        }
+      }
+
+      // Init compress module
+      if (window.initCompressUI) {
+        window.initCompressUI(fileSizeMB, detectedResolution, duration, audioBitrateKbps);
+      }
     });
 
     /* Just to make so when u click on the custom compress box it auto focus */
