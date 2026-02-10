@@ -253,10 +253,15 @@ body {
 
 /*Video additionnal*/
 #drop-here {
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
   user-select: none;
   cursor: default;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 
 
@@ -433,7 +438,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 #customInputLabel:hover {cursor: pointer !important;}
 #custom-mb-input {
-  width: 20px;
+  width: 32px;
   background: inherit;
   border-bottom: 2px white solid;
   text-align: right;
@@ -453,25 +458,26 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--dark-primary-color);
 }
 
+#customInputLabel.active .radio-content {
+  background: var(--dark-primary-color);
+}
+
 .radio-content:hover {
   background: var(--gray);
   cursor: pointer;
 }
 
-#keep-original-label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  padding: 8px 2px;
-  font-size: 9px;
-  user-select: none;
+.radio-btn.disabled .radio-content {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
 }
 
-#keep-original-label input[type="checkbox"] {
-  cursor: pointer;
-  accent-color: var(--primary-color);
+.radio-btn.disabled .radio-content:hover {
+  background: inherit;
 }
+
+
 
 
 

@@ -12,7 +12,7 @@
       <div id="current-mb-container" class="topBottomPadding active">
         <p>Current</p>
         <div class="input-container">
-          <span id="current-mb-display">00</span>
+          <span id="current-mb-display">0.0</span>
           <span>MB</span>
         </div>
       </div>
@@ -22,7 +22,7 @@
         <div class="topBottomPadding radio-content">
           <p>Custom</p>
           <div class="input-container">
-            <input type="number" id="custom-mb-input" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);" max="99">
+            <input type="text" id="custom-mb-input" inputmode="decimal" placeholder="0.0">
             <span>MB</span>
           </div>
         </div>
@@ -31,25 +31,25 @@
       
       <div id="preset-container">
         <label class="radio-btn">
-          <input type="radio" name="size-group" value="50">
-          <div class="topBottomPadding radio-content"><span>50</span><span>MB</span></div>
+          <input type="radio" name="size-group" value="1080">
+          <div class="topBottomPadding radio-content"><span>1080p</span></div>
         </label>
         
         <label class="radio-btn">
-          <input type="radio" name="size-group" value="25">
-          <div class="topBottomPadding radio-content"><span>25</span><span>MB</span></div>
+          <input type="radio" name="size-group" value="720">
+          <div class="topBottomPadding radio-content"><span>720p</span></div>
         </label>
         
         <label class="radio-btn">
-          <input type="radio" name="size-group" value="10">
-          <div class="topBottomPadding radio-content"><span>10</span><span>MB</span></div>
+          <input type="radio" name="size-group" value="480">
+          <div class="topBottomPadding radio-content"><span>480p</span></div>
+        </label>
+        
+        <label class="radio-btn">
+          <input type="radio" name="size-group" value="320">
+          <div class="topBottomPadding radio-content"><span>320p</span></div>
         </label>
       </div>
-
-      <label id="keep-original-label">
-        <input type="checkbox" id="keep-original-checkbox">
-        <span>Keep original</span>
-      </label>
       
     </div>
 
