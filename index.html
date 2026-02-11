@@ -70,6 +70,44 @@
 
           </div>
 
+          <div id="dl-progress-container" style="display:none; flex-direction:column; align-items:center; gap:14px; width:85%; max-width:450px; position:absolute; z-index:20; top:50%; left:50%; transform:translate(-50%,-50%);">
+            
+            <!-- Step circles -->
+            <div style="width:100%; position:relative; display:flex; align-items:center; padding:0 15px;">
+              <div id="dl-steps-bar-bg" style="position:absolute; left:15px; right:15px; top:50%; transform:translateY(-50%); height:6px; background:#828282; border-radius:3px; z-index:1;"></div>
+              <div id="dl-steps-bar" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); height:6px; width:0%; background:rgb(126,143,216); border-radius:3px; z-index:2; transition:width 0.4s ease;"></div>
+              <div id="dl-steps-circles" style="display:flex; justify-content:space-between; width:100%; position:relative; z-index:3;">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                  <div id="dl-step-c-0" style="width:24px; height:24px; border-radius:50%; border:4px solid #828282; background:#1f1f1f; transition:border-color 0.3s;"></div>
+                  <span id="dl-step-l-0" style="font-family:'Press Start 2P',monospace; font-size:7px; color:#828282; transition:color 0.3s;">Fetch</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                  <div id="dl-step-c-1" style="width:24px; height:24px; border-radius:50%; border:4px solid #828282; background:#1f1f1f; transition:border-color 0.3s;"></div>
+                  <span id="dl-step-l-1" style="font-family:'Press Start 2P',monospace; font-size:7px; color:#828282; transition:color 0.3s;">Download</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                  <div id="dl-step-c-2" style="width:24px; height:24px; border-radius:50%; border:4px solid #828282; background:#1f1f1f; transition:border-color 0.3s;"></div>
+                  <span id="dl-step-l-2" style="font-family:'Press Start 2P',monospace; font-size:7px; color:#828282; transition:color 0.3s;">Convert</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                  <div id="dl-step-c-3" style="width:24px; height:24px; border-radius:50%; border:4px solid #828282; background:#1f1f1f; transition:border-color 0.3s;"></div>
+                  <span id="dl-step-l-3" style="font-family:'Press Start 2P',monospace; font-size:7px; color:#828282; transition:color 0.3s;">Done</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status text -->
+            <p id="dl-progress-text" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-align:center; color:white; min-height:18px;"></p>
+
+            <!-- Percent bar -->
+            <div id="dl-pct-bar-bg" style="width:100%; height:6px; background:#828282; border-radius:3px; overflow:hidden; display:none;">
+              <div id="dl-pct-bar" style="width:0%; height:100%; background:rgb(126,143,216); border-radius:3px; transition:width 0.3s ease;"></div>
+            </div>
+
+            <!-- Cancel -->
+            <input type="button" id="dl-cancel-btn" value="Cancel" class="press-start-2p-regular" style="font-size:10px; padding:6px 14px; background:rgb(126,143,216); cursor:pointer; border:none; color:white;" />
+          </div>
+
           <div id="download-icon" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
           
           <p id="drop-here" class="press-start-2p-regular">[ DROP ]</p>
