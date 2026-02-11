@@ -62,8 +62,9 @@ const downloadMain = async function () {
     // Create both tmp folders
     createTMPFolders(operationFolderOutput);
 
-    // Downlaod screen
-    downloadInProgressUI("onlyIcon");
+    // Downlaod screen - hide input, progress UI is handled by download.js
+    document.getElementById("download-section").style.visibility = "hidden";
+    document.getElementById("drop-here").style.display = "none";
 
     //Download
     file = await download(operationFolder, link);
